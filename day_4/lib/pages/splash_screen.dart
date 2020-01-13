@@ -2,7 +2,32 @@ import 'package:flutter/material.dart';
 
 import 'file_manager.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+  Animation<double> _animation;
+
+  initState() {
+    super.initState();
+    _controller = AnimationController(
+        duration: const Duration(milliseconds: 800), vsync: this, value: 0.1);
+    _animation =
+        CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
+
+    _controller.forward();
+  }
+
+  @override
+  dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     Future.delayed(Duration(seconds: 3)).then((dynamic) {
@@ -16,9 +41,13 @@ class SplashScreen extends StatelessWidget {
             Container(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
-              child: Image.asset(
-                'assets/images/people.jpg',
-                fit: BoxFit.cover,
+              child: ScaleTransition(
+                scale: _animation,
+                alignment: Alignment.center,
+                child: Image.asset(
+                  'assets/images/people.jpg',
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             Center(
